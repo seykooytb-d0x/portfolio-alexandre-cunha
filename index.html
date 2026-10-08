@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alexandre Cunha – Portfolio Bac Pro CIEL</title>
+
+<style>
+  /* ---------- Couleurs (je change ici si je veux) ---------- */
+  :root {
+    --fond: #f4f7fb;
+    --carte: #ffffff;
+    --texte: #1b2430;
+    --gris: #5b6776;
+    --bleu: #2563eb;
+  }
+
+  /* ---------- Réglages de base ---------- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* défilement doux quand on clique sur un lien,
+     et on garde de la place pour que la barre du haut ne cache pas les titres */
+  html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--fond);
+    color: var(--texte);
+    line-height: 1.6;
+    padding: 5rem 1rem 1rem;   /* 5rem en haut = la place de la barre fixe */
+  }
+
+  /* Tout le contenu est dans une colonne centrée */
+  main { max-width: 40rem; margin: 0 auto; }
+
+  /* ---------- Barre du haut (reste collée en haut de l'écran) ---------- */
+  .barre {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 3.5rem;
+    background: var(--carte);
+    border-bottom: 1px solid #e2e8f0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 10;
+  }
+  .nom { font-weight: bold; color: var(--texte); text-decoration: none; }
+
+  /* Le bouton hamburger : trois traits */
+  .hamburger {
+    background: none; border: 0; cursor: pointer;
+    width: 2.75rem; height: 2.75rem;   /* assez gros pour appuyer avec le doigt */
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+  }
+  .hamburger span {
+    display: block; height: 3px; width: 1.6rem;
+    background: var(--texte); border-radius: 2px;
+    transition: transform .3s, opacity .3s;
+  }
+  /* Quand le menu est ouvert, les 3 traits deviennent une croix */
+  .hamburger.ouvert span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.ouvert span:nth-child(2) { opacity: 0; }
+  .hamburger.ouvert span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+  /* Le menu : caché au départ, il descend quand on clique sur le hamburger */
+  nav {
+    position: fixed; top: 3.5rem; left: 0; right: 0;
+    background: var(--carte);
+    padding: 0 1rem;
+    max-height: 0; overflow: hidden;   /* fermé = hauteur 0 */
+    transition: max-height .3s;
+    z-index: 9;
+  }
+  nav.ouvert { max-height: 20rem; border-bottom: 1px solid #e2e8f0; }
+  nav a {
+    display: block; padding: 1rem 0;   /* gros liens faciles à toucher */
+    color: var(--texte); text-decoration: none; font-weight: bold;
+    border-top: 1px solid #e2e8f0;
+  }
+  nav a:hover { color: var(--bleu); }
+
+  /* ---------- Titres ---------- */
+  h1 { font-size: 2.2rem; }
+  h1 span { display: block; font-size: 1.2rem; color: var(--bleu); }
+  h2 { margin: 2.5rem 0 1rem; color: var(--bleu); }
+
+  /* Animation au chargement : le haut de la page apparaît en douceur */
+  header { animation: apparition 1s ease; }
+  @keyframes apparition {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Les blocs blancs (stages, compétences, projets) ---------- */
+  .bloc {
+    background: var(--carte);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--bleu);
+    transition: transform .2s;   /* animation au survol */
+  }
+  .bloc:hover { transform: translateX(6px); }
+  .bloc h3 { font-size: 1.05rem; }
+  .bloc small { color: var(--gris); }
+  .bloc ul { margin: .5rem 0 0 1.2rem; color: var(--gris); }
+
+  /* ---------- Bouton ---------- */
+  /* Sur téléphone le bouton prend toute la largeur : plus facile à toucher */
+  .bouton {
+    display: block;
+    text-align: center;
+    background: var(--bleu);
+    color: white;
+    padding: .7rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: .5rem;
+    transition: transform .2s;
+  }
+  .bouton:hover { transform: scale(1.05); }
+
+  footer { text-align: center; color: var(--gris); font-size: .85rem; margin-top: 3rem; }
+
+  /* ---------- Écrans plus grands (ordinateur) ---------- */
+  @media (min-width: 700px) {
+    body { padding: 6rem 2rem 2rem; }   /* on garde la place de la barre en haut */
+    h1 { font-size: 3rem; }
+    .bouton { display: inline-block; }  /* sur ordinateur, le bouton reprend sa taille normale */
+    .barre { padding: 0 2rem; }
+    nav { padding: 0 2rem; }
+  }
+</style>
+</head>
+
+<body>
+<main>
+
+  <!-- ===== Barre du haut : mon nom + le bouton hamburger ===== -->
+  <div class="barre">
+    <a class="nom" href="#">Alexandre Cunha</a>
+    <button class="hamburger" id="hamburger" aria-label="Ouvrir le menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- ===== Menu (s'ouvre avec le hamburger) ===== -->
+  <nav id="menu">
+    <a href="#apropos">À propos</a>
+    <a href="#competences">Compétences</a>
+    <a href="#stages">Parcours &amp; stages</a>
+    <a href="#projets">Projets</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- ===== Présentation ===== -->
+  <header>
+    <h1>Alexandre Cunha <span>Étudiant en Bac Pro CIEL</span></h1>
+    <p style="margin-top:1rem; color:var(--gris)">
+      Passionné par les réseaux informatiques, les systèmes matériels et la cybersécurité.
+      En formation au lycée Joséphine Baker pour maîtriser l'installation, la maintenance
+      et la sécurisation des infrastructures numériques.
+    </p>
+    <a class="bouton" href="#contact">Me contacter</a>
+  </header>
+
+  <!-- ===== À propos ===== -->
+  <section id="apropos">
+    <h2>À propos de moi</h2>
+    <p>
+      Je suis élève en <strong>Bac Professionnel CIEL</strong> (Cybersécurité, Informatique
+      et réseaux, Électronique) au lycée Joséphine Baker à Hanches. J'y acquiers des
+      compétences théoriques et pratiques, en atelier comme en entreprise.
+    </p>
+    <p style="margin-top:1rem">
+      Rigoureux et curieux, j'aime l'informatique, les réseaux et l'électronique. J'aime
+      comprendre comment fonctionnent les équipements et résoudre des pannes matérielles
+      ou système.
+    </p>
+    <p style="margin-top:1rem">
+      Je m'intéresse aussi aux métiers du son, en particulier la musique, ainsi qu'au
+      montage et à la post-production. Je souhaite de préférence poursuivre mes études
+      dans ces domaines.
+    </p>
+    <p style="margin-top:1rem; color:var(--gris)">
+      Filière : Bac Pro CIEL · Rambouillet (78120), France · Certifications PIX &amp; PSC1
+    </p>
+  </section>
+
+  <!-- ===== Compétences ===== -->
+  <section id="competences">
+    <h2>Compétences techniques</h2>
+
+    <div class="bloc">
+      <h3>Réseaux &amp; serveurs</h3>
+      <p>Configuration de serveurs de fichiers, test de réseaux WEP/WPA (Kali Linux), adressage IP et paramétrage d'équipements.</p>
+    </div>
+    <div class="bloc">
+      <h3>Informatique &amp; systèmes</h3>
+      <p>Installation et réinstallation de Windows et des drivers, déploiement de machines virtuelles (VM), démarrage de systèmes d'exploitation.</p>
+    </div>
+    <div class="bloc">
+      <h3>Électronique &amp; métrologie</h3>
+      <p>Réparation de matériel électronique de métrologie, branchement de circuits série/parallèle, liaison de câbles sur panneaux électriques.</p>
+    </div>
+    <div class="bloc">
+      <h3>Cybersécurité &amp; pen test</h3>
+      <p>Initiation aux tests d'intrusion avec Kali Linux sur réseaux sans fil, mises à jour de sécurité système.</p>
+    </div>
+  </section>
+
+  <!-- ===== Parcours et stages (du plus récent au plus ancien) ===== -->
+  <section id="stages">
+    <h2>Parcours &amp; stages (PFMP)</h2>
+
+    <div class="bloc">
+      <h3>Bac Pro CIEL</h3>
+      <small>2024 – 2027 · Lycée Joséphine Baker (Hanches)</small>
+      <p>Formation pratique et théorique en réseaux, installation de systèmes, maintenance informatique, cybersécurité et électronique.</p>
+    </div>
+
+    <div class="bloc">
+      <h3>PFMP 4 · Cendyn France</h3>
+      <small>Juin – juillet 2026 · 4 semaines · Sèvres</small>
+      <ul>
+        <li>Immersion en entreprise dans le secteur des technologies et de l'informatique.</li>
+        <li>Développement d'un site web en HTML et CSS.</li>
+      </ul>
+    </div>
+
+    <div class="bloc">
+      <h3>PFMP 3 · Signal.fr</h3>
+      <small>Novembre – décembre 2025 · 4 semaines · Villebon-sur-Yvette</small>
+      <ul>
+        <li>Mise à jour d'OPS (ordinateurs intégrés aux écrans de conférence : Windows et drivers).</li>
+        <li>Activité de pen test (test de pénétration sur réseaux WEP et WPA avec Kali Linux).</li>
+        <li>Paramétrage d'écrans de salles de conférence (ViviTek et BenQ).</li>
+      </ul>
+    </div>
+
+    <div class="bloc">
+      <h3>PFMP 2 · Instrumentys</h3>
+      <small>Juin 2025 · 3 semaines · Auneau-Bleury-Saint-Symphorien</small>
+      <ul>
+        <li>Réparation de matériel électronique de métrologie.</li>
+        <li>Création et configuration d'un serveur de fichiers.</li>
+        <li>Réinstallation complète de systèmes d'exploitation Windows.</li>
+      </ul>
+    </div>
+
+    <div class="bloc">
+      <h3>PFMP 1 · Eiffage Construction Matériel</h3>
+      <small>Février 2025 · 3 semaines · Le Perray-en-Yvelines</small>
+      <ul>
+        <li>Découverte du fonctionnement technique d'une cabine de grue.</li>
+        <li>Liaisons et raccordements de câbles sur des panneaux électriques.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Projets ===== -->
+  <section id="projets">
+    <h2>Projets &amp; réalisations pratiques</h2>
+
+    <div class="bloc">
+      <h3>Serveur de fichiers LAN</h3>
+      <p>Mise en place d'un serveur de fichiers dédié au stockage et au partage de données en réseau local, lors d'un stage pratique.</p>
+    </div>
+    <div class="bloc">
+      <h3>Pen test Wi-Fi (Kali Linux)</h3>
+      <p>Analyse de la sécurité de clés WEP/WPA sur PC avec Kali Linux, pour repérer les vulnérabilités d'un réseau.</p>
+    </div>
+    <div class="bloc">
+      <h3>Métrologie &amp; raccordements</h3>
+      <p>Câblage de circuits électriques, raccordement sur armoires et panneaux, maintenance d'instruments de mesure.</p>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact">
+    <h2>Contact</h2>
+    <p>N'hésitez pas à me contacter par email ou par téléphone pour une opportunité de stage ou pour toute information.</p>
+    <a class="bouton" href="mailto:alexandreguy.cunha@gmail.com">Envoyer un email</a>
+
+    <p style="margin-top:1.5rem; color:var(--gris)">
+      Téléphone : +33 6 43 70 22 79<br>
+      Email : alexandreguy.cunha@gmail.com<br>
+      Localisation : Rambouillet (78120)
+    </p>
+  </section>
+
+  <footer>© 2026 Alexandre Cunha – Portfolio Bac Pro CIEL</footer>
+
+</main>
+
+<script>
+  // Je récupère le bouton et le menu grâce à leur id
+  const bouton = document.getElementById("hamburger");
+  const menu = document.getElementById("menu");
+
+  // Quand je clique sur le hamburger : j'ajoute ou j'enlève la classe "ouvert"
+  // (c'est le CSS qui fait ensuite l'animation)
+  bouton.addEventListener("click", function () {
+    menu.classList.toggle("ouvert");
+    bouton.classList.toggle("ouvert");
+  });
+
+  // Quand je clique sur un lien du menu, le menu se referme
+  menu.addEventListener("click", function () {
+    menu.classList.remove("ouvert");
+    bouton.classList.remove("ouvert");
+  });
+</script>
+</body>
+</html>
