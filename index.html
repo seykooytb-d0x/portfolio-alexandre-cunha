@@ -69,7 +69,9 @@
     transition: max-height .3s;
     z-index: 9;
   }
-  nav.ouvert { max-height: 20rem; border-bottom: 1px solid #e2e8f0; }
+  /* Ouvert = tout l'écran sous la barre. Comme ça, même si j'ajoute des liens plus tard,
+     ils restent tous visibles (et on peut faire défiler si l'écran est petit) */
+  nav.ouvert { max-height: calc(100vh - 3.5rem); overflow-y: auto; border-bottom: 1px solid #e2e8f0; }
   nav a {
     display: block; padding: 1rem 0;   /* gros liens faciles à toucher */
     color: var(--texte); text-decoration: none; font-weight: bold;
@@ -288,7 +290,7 @@
     </div>
     <div class="bloc">
       <h3>Travailler avec de gros artistes du rap français</h3>
-      <p>Collaborer avec les grands noms de la scène rap française comme Niska, Ninho, SCH, Tiakola, SDM, etc... Et participer à la création de leurs projets.</p>
+      <p>Collaborer avec les grands noms de la scène rap française et participer à la création de leurs projets.</p>
     </div>
     <div class="bloc">
       <h3>Monter mon propre label de musique</h3>
